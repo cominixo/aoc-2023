@@ -4,7 +4,7 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 
 const print = std.debug.print;
-const part = 1;
+const part = 2;
 
 const MapEntry = struct {
     dest_start: i64,
@@ -26,7 +26,7 @@ pub fn main() !void {
     _ = seeds_it.next();
 
     var seeds = std.mem.split(u8, seeds_it.next().?, " ");
-    
+
     var inputs = std.ArrayList(i64).init(allocator);
 
     var seeds_range = std.ArrayList(Range).init(allocator);
@@ -55,12 +55,7 @@ pub fn main() !void {
                 const source_start = try std.fmt.parseInt(i64, ranges_it.next().?, 10); 
                 const range = try std.fmt.parseInt(i64, ranges_it.next().?, 10);
 
-                const entry = if (part == 2) MapEntry {
-                    .dest_start = source_start,
-                    .source_start = dest_start,
-                    .range = range,
-                } else 
-                MapEntry {
+                const entry = MapEntry {
                     .dest_start = dest_start,
                     .source_start = source_start,
                     .range = range,
@@ -99,9 +94,9 @@ pub fn main() !void {
             input = i;
             for (maps.items) |map| {
                 for (map.items) |entry| {
-                    if (entry.source_start + entry.range >= input and entry.source_start <= input) {
+                    if (entry.dest_start + entry.range >= input and entry.dest_start <= input) {
                         
-                        input = (entry.dest_start - entry.source_start) + input;
+                        input = (entry.source_start - entry.dest_start) + input;
                         break;
                     }
                 }
